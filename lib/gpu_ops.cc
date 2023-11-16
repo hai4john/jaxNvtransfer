@@ -13,6 +13,8 @@ namespace {
 
 pybind11::dict Registrations() {
     pybind11::dict dict;
+    dict["gpu_nvtransfer_i16"] = EncapsulateFunction(gpu_nvtransfer_i16);
+    dict["gpu_nvtransfer_i32"] = EncapsulateFunction(gpu_nvtransfer_i32);
     dict["gpu_nvtransfer_f32"] = EncapsulateFunction(gpu_nvtransfer_f32);
     dict["gpu_nvtransfer_f64"] = EncapsulateFunction(gpu_nvtransfer_f64);
     return dict;

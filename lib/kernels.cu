@@ -141,6 +141,14 @@ inline void apply_nvtransfer(cudaStream_t stream, void **buffers, const char *op
 
 }  // namespace
 
+void gpu_nvtransfer_i16(cudaStream_t stream, void **buffers, const char *opaque, std::size_t opaque_len) {
+    apply_nvtransfer<int16_t>(stream, buffers, opaque, opaque_len);
+}
+
+void gpu_nvtransfer_i32(cudaStream_t stream, void **buffers, const char *opaque, std::size_t opaque_len) {
+    apply_nvtransfer<int32_t>(stream, buffers, opaque, opaque_len);
+}
+
 void gpu_nvtransfer_f32(cudaStream_t stream, void **buffers, const char *opaque, std::size_t opaque_len) {
     apply_nvtransfer<float>(stream, buffers, opaque, opaque_len);
 }

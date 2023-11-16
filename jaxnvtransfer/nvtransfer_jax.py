@@ -67,7 +67,8 @@ def nvtransfer(send_buf, send_buf_size, recv_buf_size, src_rank, dst_rank):
 # based on the send array and a number of partitions (ie devices)
 def _nvtransfer_abstract(send_buf, send_buf_size, recv_buf_size, src_rank, dst_rank):
     output_dtype = dtypes.canonicalize_dtype(send_buf.dtype)
-    output_shape = send_buf.shape
+    # output_shape = send_buf.shape
+    # output_shape = (recv_buf_size,)
     output_shape = (recv_buf_size,)
 
     return (ShapedArray(output_shape, output_dtype),)
@@ -77,15 +78,26 @@ def _nvtransfer_abstract(send_buf, send_buf_size, recv_buf_size, src_rank, dst_r
 def _nvtransfer_translation(ctx, send_buf, send_buf_size, recv_buf_size, src_rank, dst_rank):
     input_type = mlir.ir.RankedTensorType(send_buf.type)
     dims_in = input_type.shape
+    i16Type = mlir.ir.IntegerType.get_signless(16)
+    i32Type = mlir.ir.IntegerType.get_signless(32)
     f32Type = mlir.ir.F32Type.get()
+    f64Type = mlir.ir.F64Type.get()
 
-    if input_type.element_type == f32Type:
-        outType = mlir.ir.F32Type.get()
-        op_name = "gpu_nvtransfer_f32"
-    else:
-        outType = mlir.ir.F64Type.get()
+    if input_type.element_type == i16Type:
+        outType = i16Type
+        op_name = "gpu_nvtransfer_i16"
+    elif input_type.element_type == i32Type:
+        outType = i32Type
+        op_name = "gpu_nvtransfer_i32"           
+    elif input_type.element_type == f32Type:
+        outType = f32Type
+        op_name = "gpu_nvtransfer_f32"        
+    elif input_type.element_type == f64Type:
+        outType = f64Type
         op_name = "gpu_nvtransfer_f64"
-    
+    else :
+        print('fatal error : Unsupported type')
+
     dims_out = dims_in
     dims_out[0] = recv_buf_size
 

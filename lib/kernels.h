@@ -19,6 +19,10 @@ struct nvtransferDescriptor {
 /**
  * Generic signature for a custom op with CUDA
  */
+void gpu_nvtransfer_i16(cudaStream_t stream, void** buffers, const char* opaque, std::size_t opaque_len);
+
+void gpu_nvtransfer_i32(cudaStream_t stream, void** buffers, const char* opaque, std::size_t opaque_len);
+
 void gpu_nvtransfer_f32(cudaStream_t stream, void** buffers, const char* opaque, std::size_t opaque_len);
 
 void gpu_nvtransfer_f64(cudaStream_t stream, void** buffers, const char* opaque, std::size_t opaque_len);
